@@ -3,21 +3,24 @@
     <h1>What's for dinner? (fast i vite)</h1>
   </header>
   <SearchBox></SearchBox>
+  <Recipe></Recipe>
   <div id="recipeSuggestions">
-    <CategorySuggestion category="Beef"></CategorySuggestion>
+    <CategorySuggestion category="Pasta"></CategorySuggestion>
     <CategorySuggestion category="Seafood"></CategorySuggestion>
-    <CategorySuggestion category="Chicken"></CategorySuggestion>
+    <CategorySuggestion category="Dessert"></CategorySuggestion>
   </div>
 </template>
 
 <script>
 import CategorySuggestion from './components/CategorySuggestion.vue'
 import SearchBox from './components/SearchBox.vue'
+import Recipe from './components/Recipe.vue'
 
 export default {
   components: {
     CategorySuggestion,
     SearchBox,
+    Recipe,
   },
 }
 </script>
