@@ -1,5 +1,6 @@
 <template>
   <fieldset>
+    <label>Number of keywords: {{ numberOfKeywords }}</label>
     <input type="text" v-model="inputValue" />
     <input
       @click="onClick"
@@ -19,12 +20,15 @@
       <h2>
         Search result for {{ searchText }} ({{ numberOfSearchResult }} results)
       </h2>
-      <ul v-for="meal in meals">
-        <li>
-          <img alt="Picture of the Meal" :src="meal.thumbNail" />
-          <a :href="meal.id">{{ meal.title }}</a>
-        </li>
-      </ul>
+
+      <section id="searchResult">
+        <ul v-for="meal in meals">
+          <li>
+            <img alt="Picture of the Meal" :src="meal.thumbNail" />
+            <RouterLink :to="`/${meal.id}`">{{ meal.title }}</RouterLink>
+          </li>
+        </ul>
+      </section>
     </div>
   </div>
 </template>
@@ -43,14 +47,22 @@ export default {
       searchText: null,
     }
   },
+  computed: {
+    numberOfKeywords() {
+      if (this.inputValue.trim() === '') {
+        return 0
+      } else {
+        return this.inputValue.trim().split(' ').length
+      }
+    },
+  },
   methods: {
-    fetchSearchResult(ingredient) {
+    fetchSearchResult(searchWord) {
       axios
         .get(
-          `https://www.themealdb.com/api/json/v1/1/filter.php?i=${ingredient}`
+          `https://www.themealdb.com/api/json/v1/1/search.php?s=${searchWord}`
         )
         .then((result) => {
-          console.log(result.data)
           if (result.data.meals === null) {
             this.error = true
           } else {
@@ -74,6 +86,11 @@ export default {
       this.searchText = this.inputValue
     },
   },
+  watch: {
+    searchText(text) {
+      alert(`Search results for "${text}" will be served...`)
+    },
+  },
 }
 </script>
 
@@ -87,8 +104,17 @@ fieldset {
   padding: 2em;
 }
 
+label {
+  padding: 0 1em;
+}
+
 p {
   text-align: center;
   margin-bottom: 1.5em;
+}
+
+#searchResult {
+  background-color: lightskyblue;
+  margin: 1em;
 }
 </style>

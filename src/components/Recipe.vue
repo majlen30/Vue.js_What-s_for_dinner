@@ -6,14 +6,9 @@
         <img alt="Picture of the recipe" :src="thumbNail" />
       </div>
 
-      <!-- <div v-if="ingredients !== null"> -->
       <ul v-for="i in ingredients">
         <li>{{ i }}</li>
       </ul>
-      <!-- </div>
-      <div v-else>
-        <h2>Loading...</h2>
-      </div> -->
 
       <h3>Instructions:</h3>
 
@@ -24,20 +19,20 @@
 
 <script setup>
 import { ref } from 'vue'
+import { useRoute } from 'vue-router'
 import axios from 'axios'
 
-// let meal = ref({ ingredients: null })
 let ingredients = ref(null),
   thumbNail = ref(null),
   title = ref(null),
-  instructions = ref(null)
+  instructions = ref(null),
+  route = useRoute()
 
-createRecipe()
-// test()
+createRecipe(route.params.id)
 
-function createRecipe() {
+function createRecipe(id) {
   axios
-    .get(`https://www.themealdb.com/api/json/v1/1/lookup.php?i=52839`)
+    .get(`https://www.themealdb.com/api/json/v1/1/lookup.php?i=${id}`)
     .then((result) => {
       let recipe = result.data.meals[0],
         ingredient = [],
@@ -69,42 +64,45 @@ function createRecipe() {
       }
     })
 }
-
-// async function test() {
-//   try {
-//     const res = await axios.get(
-//       `https://www.themealdb.com/api/json/v1/1/lookup.php?i=52839`
-//     )
-//     let recipe = result.data.meals[0],
-//       ingredient = [],
-//       measure = []
-
-//     for (let property in recipe) {
-//       if (property.startsWith('strIngredient')) {
-//         ingredient.push(property)
-//       }
-//       if (property.startsWith('strMeasure')) {
-//         measure.push(property)
-//       }
-//     }
-
-//     // -----------------------------------------------------------------------
-//     // Loop som filtrerar alla aktiva nycklar
-//     meal = {
-//       ingredients: [],
-//     }
-
-//     for (let i = 0; i < ingredient.length; i++) {
-//       if (recipe[ingredient[i]] !== null && recipe[ingredient[i]] !== '') {
-//         meal.ingredients.push(`${recipe[measure[i]]} ${recipe[ingredient[i]]}`)
-//       }
-//     }
-
-//     console.log(meal.ingredients)
-//   } catch (error) {
-//     // Handle errors
-//   }
-// }
 </script>
 
-<style></style>
+<style scoped>
+section {
+  background-color: lightskyblue;
+  display: flex;
+  justify-content: center;
+  margin: 1em;
+}
+
+article {
+  border: solid white 2px;
+  flex-direction: column;
+  justify-content: center;
+  padding: 3em;
+  margin: 1em;
+  width: 60vw;
+}
+
+div {
+  align-items: center;
+  display: flex;
+}
+
+img {
+  margin-bottom: 1em;
+  width: 20vw;
+}
+
+h2 {
+  margin: 1em auto;
+}
+
+h3 {
+  margin: 1.5em 0 0;
+}
+
+li {
+  border: none;
+  padding: 0;
+}
+</style>

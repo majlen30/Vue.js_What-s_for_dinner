@@ -1,10 +1,11 @@
 <template>
   <section class="categorySuggestion">
-    <h2>{{ category }}</h2>
+    <RandomCategoryButton @random-category="fetchMeals" />
+    <h2>{{ categoryTitle }}</h2>
     <ul v-for="meal in meals">
       <li>
         <img alt="Picture of the Meal" :src="meal.thumbNail" />
-        <a :href="meal.id">{{ meal.title }}</a>
+        <RouterLink :to="`/${meal.id}`">{{ meal.title }}</RouterLink>
       </li>
     </ul>
   </section>
@@ -12,30 +13,20 @@
 
 <script>
 import axios from 'axios'
+import { RouterLink } from 'vue-router'
+import RandomCategoryButton from './RandomCategoryButton.vue'
 
 export default {
   created() {
-    this.fetchCategories()
-    this.fetchMeals(this.c)
+    this.fetchMeals(this.category)
   },
   data() {
     return {
-      categories: null,
-      c: this.category,
+      categoryTitle: null,
       meals: null,
     }
   },
   methods: {
-    fetchCategories() {
-      axios
-        .get('https://www.themealdb.com/api/json/v1/1/list.php?c=list')
-        .then((result) => {
-          this.categories = []
-          for (let i = 0; i < result.data.meals.length; i++) {
-            this.categories.push(result.data.meals[i].strCategory)
-          }
-        })
-    },
     fetchMeals(category) {
       axios
         .get(`https://www.themealdb.com/api/json/v1/1/filter.php?c=${category}`)
@@ -56,6 +47,7 @@ export default {
   props: {
     category: String,
   },
+  components: { RouterLink, RandomCategoryButton },
 }
 </script>
 
@@ -66,6 +58,8 @@ h2 {
 
 .categorySuggestion {
   background-color: lightskyblue;
+  display: flex;
+  flex-direction: column;
   margin: 1em;
   margin-top: 0;
   padding: 1em;
@@ -79,7 +73,7 @@ img {
 
 ul {
   margin: 0;
-  padding: 0;
+  padding: 1em;
 }
 
 li {
